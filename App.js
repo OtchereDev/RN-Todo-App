@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View,ScrollView,FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Keyboard, View,TouchableWithoutFeedback,FlatList,Alert } from 'react-native';
 import AddTodo from './components/addTodo';
 import Header from './components/Header';
 import TodoItem from './components/TodoItem';
@@ -19,16 +19,23 @@ export default function App() {
   }
 
   const submitHandler=(text)=>{
-        setTodo(prevTodo=>{
-          return [
-            ...prevTodo,
-            {text, key:Math.random().toString()}
-          ]
-        })
+        if(text.length > 3){
+
+          setTodo(prevTodo=>{
+            return [
+              {text, key:Math.random().toString()},
+              ...prevTodo,
+            ]
+          })
+        }else{
+          Alert.alert("Oops","Todo must greater than 3 characters long",[
+            {text:"Understood", onPress:()=>console.log("alert closed")}
+          ])
+        }
   }
  
   return (
-
+    <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
     <View style={styles.container}>
       {/* header */}
       <Header />
@@ -49,6 +56,7 @@ export default function App() {
       </View>
 
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -58,9 +66,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   content:{
-    padding:40
+    padding:40,
+    flex: 1
   },
   list:{
-    marginTop: 20
+    marginTop: 20,
+    flex: 1
   }
 });
